@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>What did I tell you about clicking random links?</title>
+  <meta name="description" content="A single-line website with a playful warning." />
+  <style>
+    :root {
+      --bg: radial-gradient(1200px 800px at 20% 20%, #f0f4ff 0%, #ffffff 40%, #f8fbff 100%);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: #0f172a;
+      line-height: 1.3;
+      overflow: hidden;
+    }
+    main {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw + 1rem, 3.5rem);
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      z-index: 2;
+    }
+    @keyframes wiggle { 
+      0%, 100% { transform: rotate(0deg);} 
+      25% { transform: rotate(1deg);} 
+      75% { transform: rotate(-1deg);} 
+    }
+    h1:active { animation: wiggle 120ms ease-in-out 1; }
+    @media (prefers-reduced-motion: reduce) {
+      h1 { transition: none !important; }
+      h1:active { animation: none; }
+    }
+    #secret {
+      display: none;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      font-weight: 500;
+      text-align: center;
+      color: #dc2626;
+      z-index: 2;
+      position: relative;
+    }
+    /* Glitchy static background */
+    #static {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3podGp4MGhidWc0ZW03dm02a3ZuNWk3ejc3czlpZHZiZGFvc2N0dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/6zvDSUtuMqp3O/giphy.gif') center/cover repeat;
+      opacity: 0.6;
+      z-index: 0;
+    }
+    /* Explosion overlay */
+    #explosion {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://media.giphy.com/media/oe33xf3B50fsc/giphy.gif') center/contain no-repeat;
+      background-color: black;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+  <div id="static"></div>
+  <div id="explosion"></div>
+  <main>
+    <div>
+      <h1 id="warning">What did I tell you about clicking random links?</h1>
+      <p id="secret">Shh this is not an easter egg! Stand down, agent. One more click and you’ll win a front-row seat to the Phishing Awareness Extravaganza and yes, there’s a quiz at the end.📝</p>
+    </div>
+  </main>
+  <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+  <audio id="secret-sound" src="https://actions.google.com/sounds/v1/impacts/small_glass_pane_shatter.ogg" preload="auto"></audio>
+  <audio id="last" src="https://actions.google.com/sounds/v1/emergency/beeper_emergency_call.ogg" preload="auto"></audio>
+  <audio id="boom" src="https://actions.google.com/sounds/v1/weapons/big_explosion_cut_off.ogg" preload="auto"></audio>
+  <script>
+    const warning = document.getElementById('warning');
+    const beep = document.getElementById('beep');
+    const secret = document.getElementById('secret');
+    const secretSound = document.getElementById('secret-sound');
+    const staticBg = document.getElementById('static');
+    const last = document.getElementById('last');
+    const explosion = document.getElementById('explosion');
+    const boom = document.getElementById('boom');
+
+    let clickCount = 0;
+
+    warning.addEventListener('click', () => {
+      beep.currentTime = 0;
+      beep.play();
+
+      clickCount++;
+
+      // Easter egg 1: Show secret message after 5 clicks
+      if (clickCount === 5) {
+        secret.style.display = 'block';
+        secretSound.play();
+      }
+
+      // Easter egg 2: Change text after 10 clicks
+      if (clickCount === 10) {
+        warning.textContent = "Seriously, stop clicking before you break something.";
+      }
+
+      // Easter egg 3: Glitchy static background after 15 clicks
+      if (clickCount === 15) {
+        staticBg.style.display = 'block';
+        warning.textContent = "⛓️‍💥 You broke it. Congrats!";
+        last.play();
+
+        // Trigger explosion after 3 seconds
+        setTimeout(() => {
+          explosion.style.display = 'block';
+          boom.play();
+
+          // After explosion (~3 seconds), remove GIF but keep black background
+          setTimeout(() => {
+            explosion.style.backgroundImage = 'none';
+          }, 2000);
+        }, 2000);
+      }
+    });
+  </script>
+</body>
+</html>
